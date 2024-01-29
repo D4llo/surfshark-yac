@@ -1,7 +1,7 @@
 MIT License
 
-Copyright (c) 2023 Jamie Magee
-Copyright (c) 2023 Liam Doan <not.lamdn@gmail.com>
+Copyright (c) 2023 Jamie Magee  
+Copyright (c) 2023 Liam Doan <not.lamdn@gmail.com>  
 Copyright (c) 2024 Dallo
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
