@@ -3,7 +3,7 @@
 pkgname=surfshark-yac
 pkgver=2.1.0.2503
 pkgrel=1
-pkgdesc="Yet another Surfshark VPN GUI client for Arch Linux."
+pkgdesc="Yet another Surfshark VPN GUI Client for Arch Linux."
 arch=('x86_64')
 url="https://surfshark.com"
 license=('custom:surfshark')
