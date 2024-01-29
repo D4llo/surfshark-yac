@@ -1,5 +1,5 @@
 pkgbase = surfshark-yac
-	pkgdesc = Yet another Surfshark VPN GUI client for Linux. Encrypt your internet activity so no one can track or steal your data. Increase your privacy and avoid tracking by using a different IP address. Keep your digital freedom and security while using unprotected networks.
+	pkgdesc = Yet another Surfshark VPN GUI Client for Arch Linux.
 	pkgver = 2.1.0.2503
 	pkgrel = 1
 	url = https://surfshark.com
@@ -17,4 +17,4 @@ pkgbase = surfshark-yac
 	source = https://ocean.surfshark.com/debian/pool/main/s/surfshark/surfshark_2.1.0-2503_amd64.deb
 	sha512sums = a7d27fa286d480b3247a60b2c05d6f40697561bcd87693a5cb81fe7dbccdfdd7bfda20d43e07ac6ed34d85bea1e7317a47af5ae99466aa861db25ea6b9caf14a
 
-pkgname = surfshark-client
+pkgname = surfshark-yac
