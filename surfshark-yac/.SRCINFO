@@ -1,5 +1,5 @@
 pkgbase = surfshark-yac
-	pkgdesc = Yet Another Surfshark VPN GUI Client for Arch Linux.
+	pkgdesc = Yet another Surfshark VPN GUI Client for Arch Linux.
 	pkgver = 2.1.0.2503
 	pkgrel = 1
 	url = https://surfshark.com
