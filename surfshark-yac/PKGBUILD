@@ -10,8 +10,8 @@ license=('custom:surfshark')
 depends=('alsa-lib' 'at-spi2-core' 'gjs' 'nss' 'org.freedesktop.secrets' 'wireguard-tools')
 options=('!strip' '!emptydirs')
 install=${pkgname}.install
-source=("https://ocean.surfshark.com/debian/pool/main/s/surfshark/surfshark_2.1.0-2503_amd64.deb")
-sha512sums=('a7d27fa286d480b3247a60b2c05d6f40697561bcd87693a5cb81fe7dbccdfdd7bfda20d43e07ac6ed34d85bea1e7317a47af5ae99466aa861db25ea6b9caf14a')
+source=("https://ocean.surfshark.com/debian/pool/main/s/surfshark_2.1.0-2503_amd64.deb")
+sha256sums=('6023498a242b417e523800e2314c40ff62abb8679193d7784eef93cd31b9edb3')
 
 package(){
 
