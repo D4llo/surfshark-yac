@@ -1,20 +1,18 @@
-pkgbase = surfshark-yac
-	pkgdesc = Yet Another Surfshark VPN GUI Client for Arch Linux.
-	pkgver = 2.1.0.2503
+pkgbase = gnome-shell-extension-emoji-selector-git
+	pkgdesc = Gnome shell emoji picker Extension.
+	pkgver = 20.r14.gfd72b6a
 	pkgrel = 1
-	url = https://surfshark.com
-	install = surfshark-yac.install
-	arch = x86_64
-	license = custom:surfshark
-	depends = alsa-lib
-	depends = at-spi2-core
-	depends = gjs
-	depends = nss
-	depends = org.freedesktop.secrets
-	depends = wireguard-tools
-	options = !strip
-	options = !emptydirs
-	source = https://ocean.surfshark.com/debian/pool/main/s/surfshark_2.1.0-2503_amd64.deb
-	sha256sums = 6023498a242b417e523800e2314c40ff62abb8679193d7784eef93cd31b9edb3
+	url = https://github.com/maoschanz/emoji-selector-for-gnome
+	install = gnome-shell-extension.install
+	arch = any
+	license = GPL3
+	makedepends = git
+	depends = gnome-shell>=3.32
+	optdepends = ttf-joypixels: Emoji as a Service (formerly EmojiOne)
+	optdepends = noto-fonts-emoji: Google Noto emoji fonts
+	provides = gnome-shell-extension-emoji-selector
+	conflicts = gnome-shell-extension-emoji-selector
+	source = gnome-shell-extension-emoji-selector::git+https://github.com/maoschanz/emoji-selector-for-gnome
+	sha256sums = SKIP
 
-pkgname = surfshark-yac
+pkgname = gnome-shell-extension-emoji-selector-git
