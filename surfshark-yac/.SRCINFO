@@ -14,6 +14,8 @@ pkgbase = surfshark-yac
 	depends = wireguard-tools
 	options = !strip
 	options = !emptydirs
+	provides = surfshark-yac
+	conflicts = surfshark-yac
 	source = https://ocean.surfshark.com/debian/pool/main/s/surfshark_2.2.0_amd64.deb
 	sha256sums = c9dc96dbcf7a970e4fe2b4de71e3fb6655f75446ef1dbfc02856ff5de40efb64
 
