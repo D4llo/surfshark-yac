@@ -2,7 +2,7 @@ name: Fetch deb package
 
 on:
   schedule:
-    - cron: "*/15 * * * *"
+    - cron: "*/5 * * * *"
 
 jobs:
   fetchdebpkg:
