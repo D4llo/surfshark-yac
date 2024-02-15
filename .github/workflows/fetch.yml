@@ -2,7 +2,7 @@ name: Fetch deb package
 
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "*/30 * * * *"
 
 permissions:
   actions: 'write'
