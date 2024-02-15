@@ -119,7 +119,7 @@ jobs:
           set -euxo pipefail
 
           pkgbuild_content=$(cat ./surfshark-yac/PKGBUILD)
-          re="^pkgver=([0-9\.\-\w]+)$"
+          re="pkgver=([0-9\.\-\w]+)"
           if [[ $pkgbuild_content =~ $re ]];
             then my_pkgbuild=${BASH_REMATCH[1]};
             echo "my_pkgbuild=${my_pkgbuild}" >> $GITHUB_ENV
