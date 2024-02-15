@@ -4,11 +4,20 @@ on:
   schedule:
     - cron: "*/5 * * * *"
 
+permissions:
+  actions: 'write'
+
 jobs:
   fetchdebpkg:
     runs-on: ubuntu-latest
     steps:
-      - name: Find updated package
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref }}
+
+      - name: Fetch updated package
         run: |
           #!/usr/bin/env bash
 
@@ -63,12 +72,91 @@ jobs:
           stringarray=($sentence)
           
           source=${stringarray[0]:1:-1}
-          sha512sums=${stringarray[3]:7}
+          sha256sums=${stringarray[3]:7}
           pkgver=$(apt-cache show surfshark | grep Version | cut -c 10-)
+
+          echo "FETCHED_PKGVER=${pkgver}" >> $GITHUB_ENV
+          echo "FETCHED_SOURCE=${source}" >> $GITHUB_ENV
+          echo "FETCHED_SHA256SUMS=${sha256sums}" >> $GITHUB_ENV
+
+          echo "pkver->${pkgver}" 
           
-          cat <<-_EOT_
-          source=("${source}")
-          sha512sums=('${sha512sums}')
+          cat <<-_EOT_ > "./surfshark-yac/PKGBUILD"
+          # Maintainer: Dallo <dallo@tutanota.com>
+          
+          pkgname=surfshark-yac
           pkgver=${pkgver}
           pkgrel=1
+          pkgdesc="Yet another Surfshark VPN GUI Client for the AUR."
+          arch=('x86_64')
+          url="https://surfshark.com"
+          license=('custom:surfshark')
+          depends=('alsa-lib' 'at-spi2-core' 'gjs' 'nss' 'org.freedesktop.secrets' 'wireguard-tools')
+          options=('!strip' '!emptydirs')
+          provides=("surfshark-yac")
+          conflicts=("surfshark-yac")
+          install=surfshark-yac.install
+          source=("${source}")
+          sha256sums=('${sha256sums}')
+          
+          package() {
+          	# Extract package data
+          	tar -xJ -f data.tar.xz -C "${pkgdir}"
+          
+          	install -D -m644 "${pkgdir}/opt/Surfshark/resources/dist/resources/surfsharkd.js.LICENSE.txt" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+          }
           _EOT_
+
+          echo "pkver->${pkgver}" 
+
+      - name: Find updated package
+        run: |
+          #!/usr/bin/env bash
+          set -euxo pipefail
+
+          echo "pkgbuild=$(git diff --name-only origin/main origin/${GITHUB_HEAD_REF} "*PKGBUILD" | head -1 | xargs dirname)" >> $GITHUB_ENV
+          echo "pkgbuild->$(git diff --name-only origin/main origin/${GITHUB_HEAD_REF} "*PKGBUILD" | head -1 | xargs dirname)" 
+
+      - name: Cancel workflow if equals
+        if: ${{ env.pkgbuild == env.pkgver }}
+        run: |
+          gh run cancel ${{ github.run_id }}
+          gh run watch ${{ github.run_id }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Validate package
+        if: ${{ env.pkgbuild != env.pkgver }}
+        uses: ./.github/actions/aur
+        with:
+          action: 'updpkgsums'
+          pkgname: ${{ env.pkgbuild }}
+
+      - name: Commit
+        if: ${{ env.pkgbuild != env.pkgver }}
+        uses: stefanzweifel/git-auto-commit-action@8756aa072ef5b4a080af5dc8fef36c5d586e521d # v5.0.0
+        with:
+          file_pattern: '*/PKGBUILD */.SRCINFO'
+
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          fetch-depth: 0
+
+      - name: Find updated package
+        run: |
+          #!/usr/bin/env bash
+          set -euxo pipefail
+
+          echo "pkgbuild2=$(git diff --name-only HEAD HEAD~1 "*/.SRCINFO" | head -1 | xargs dirname)" >> $GITHUB_ENV
+
+      - name: Publish package
+        uses: KSXGitHub/github-actions-deploy-aur@063daf78a56662642bb00049ce78425ff6d0fad7 # v2.7.0
+        if: ${{ env.pkgbuild2 == env.pkgver }}
+        with:
+          pkgname: ${{ env.pkgbuild2 }}
+          pkgbuild: ${{ env.pkgbuild2 }}/PKGBUILD
+          assets: ${{ env.pkgbuild2 }}/*
+          commit_username: ${{ secrets.AUR_USERNAME }}
+          commit_email: ${{ secrets.AUR_EMAIL }}
+          ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
