@@ -73,22 +73,17 @@ jobs:
           
           source=${stringarray[0]:1:-1}
           sha256sums=${stringarray[3]:7}
-          pkgver=$(apt-cache show surfshark | grep Version | cut -c 10-)
+          aptver=$(apt-cache show surfshark | grep Version | cut -c 10-)
 
-          echo "FETCHED_PKGVER=${pkgver}" >> $GITHUB_ENV
+          echo "FETCHED_PKGVER=${aptver}" >> $GITHUB_ENV
           echo "FETCHED_SOURCE=${source}" >> $GITHUB_ENV
           echo "FETCHED_SHA256SUMS=${sha256sums}" >> $GITHUB_ENV
-
-          echo "pkver->${pkgver}"
-          pwd
-          ls -la
-          cat ./surfshark-yac/PKGBUILD
           
           cat <<-_EOT_ > "./surfshark-yac/PKGBUILD"
           # Maintainer: Dallo <dallo@tutanota.com>
           
           pkgname=surfshark-yac
-          pkgver=${pkgver}
+          pkgver=${aptver//-/.}
           pkgrel=1
           pkgdesc="Yet another Surfshark VPN GUI Client for the AUR."
           arch=('x86_64')
@@ -110,24 +105,27 @@ jobs:
           }
           _EOT_
           
-          echo "pkver->${pkgver}" 
-          cat ./surfshark-yac/PKGBUILD
+          echo "pkgver->${aptver} from apt (new)" 
 
       - name: Find updated package
         run: |
           #!/usr/bin/env bash
           set -euxo pipefail
 
-          pkgbuild_content=$(cat ./surfshark-yac/PKGBUILD)
-          re="pkgver=([0-9\.\-\w]+)"
-          if [[ $pkgbuild_content =~ $re ]];
-            then my_pkgbuild=${BASH_REMATCH[1]};
-            echo "my_pkgbuild=${my_pkgbuild}" >> $GITHUB_ENV
-            echo "my_pkgbuild->${my_pkgbuild}" 
+          pkgbuild_content=$(awk 'NR==4' ./surfshark-yac/PKGBUILD)
+          re="pkgver=(.+)"
+          if [[ $pkgbuild_content =~ $re ]]; then
+            pkgbuild=${BASH_REMATCH[1]//-/.};
+            echo "pkgbuild=${pkgbuild}" >> $GITHUB_ENV
+            echo "pkgbuild->${pkgbuild} from repository (old)" 
+          else
+            echo "no matches"
+            gh run cancel ${{ github.run_id }}
+            gh run watch ${{ github.run_id }}
           fi
 
       - name: Cancel workflow if equals
-        if: ${{ env.my_pkgbuild == env.pkgver }}
+        if: ${{ env.pkgbuild == env.pkgver }}
         run: |
           gh run cancel ${{ github.run_id }}
           gh run watch ${{ github.run_id }}
@@ -135,14 +133,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Validate package
-        if: ${{ env.my_pkgbuild != env.pkgver }}
+        if: ${{ env.pkgbuild != env.pkgver }}
         uses: ./.github/actions/aur
         with:
           action: 'updpkgsums'
           pkgname: ${{ env.pkgbuild }}
 
       - name: Commit
-        if: ${{ env.my_pkgbuild != env.pkgver }}
+        if: ${{ env.pkgbuild != env.pkgver }}
         uses: stefanzweifel/git-auto-commit-action@8756aa072ef5b4a080af5dc8fef36c5d586e521d # v5.0.0
         with:
           file_pattern: '*/PKGBUILD */.SRCINFO'
