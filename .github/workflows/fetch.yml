@@ -75,9 +75,9 @@ jobs:
           sha256sums=${stringarray[3]:7}
           aptver=$(apt-cache show surfshark | grep Version | cut -c 10-)
 
-          echo "FETCHED_PKGVER=${aptver}" >> $GITHUB_ENV
-          echo "FETCHED_SOURCE=${source}" >> $GITHUB_ENV
-          echo "FETCHED_SHA256SUMS=${sha256sums}" >> $GITHUB_ENV
+          echo "pkgver=${aptver//-/.}" >> $GITHUB_ENV
+          echo "source=${source}" >> $GITHUB_ENV
+          echo "sha256sums=${sha256sums}" >> $GITHUB_ENV
           
           cat <<-_EOT_ > "./surfshark-yac/PKGBUILD"
           # Maintainer: Dallo <dallo@tutanota.com>
