@@ -105,7 +105,7 @@ jobs:
           }
           _EOT_
           
-          echo "pkgver->${aptver} from apt (new)" 
+          echo "pkgver->${aptver//-/.} from apt (new)" 
 
       - name: Find updated package
         run: |
