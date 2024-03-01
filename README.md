@@ -7,6 +7,8 @@ Surfshark Yet Another Client is a GUI client made on the package surfshark-clien
 
 This repository was made with a lot of help from @jamiemagee. Thanks to him and his [template](https://github.com/JamieMagee/aur-packages-template).
 
+This repo is based on the [`surfshark-client`](https://aur.archlinux.org/packages/surfshark-client) AUR package.
+
 ## License
 
 [MIT](https://github.com/D4llo/surfshark-yac/blob/main/LICENSE.md)
