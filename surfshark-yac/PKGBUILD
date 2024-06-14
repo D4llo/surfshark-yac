@@ -13,7 +13,7 @@ provides=("surfshark-yac")
 conflicts=("surfshark-yac")
 install=surfshark-yac.install
 source=("https://ocean.surfshark.com/debian/pool/main/s/surfshark_2.4.3_amd64.deb")
-sha256sums=('3b207046aa7e0e31c55c63596f1457251d9fdf5dc1e306bba707702993ea9fd6aa621')
+sha256sums=('3b207046aa7e0e31c55c63596f1457251d9fdf5dc1e306bba707702993ea9fd6')
 
 package() {
 	# Extract package data
